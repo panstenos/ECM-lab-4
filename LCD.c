@@ -125,18 +125,19 @@ void LCD_sendstring(char *string1, char *string2) //input two strings
 void LCD_scroll(int max) //scrolls back and forth; input maximum length among the two strings
 {
     max -= 16; //LCD has 16 bits length 
-    int i; //declare the integer
-    for (i=0;i<max;i++){ //repeat the loop 
-    LCD_sendbyte(0b00011000,0); //Turn on DB3
-    //code here to scroll the text on the LCD screen
-    __delay_ms(500);
+    if (max > 0){ //only if one of the two lines is more than 16 characters in length
+        int i; //declare the integer
+        for (i=0;i<max;i++){ //scroll right max characters; notice max -= 16
+        LCD_sendbyte(0b00011000,0); //scroll right function
+        //code here to scroll the text on the LCD screen
+        __delay_ms(500); // delay 0.5 sec
+        }
+        for (i=0;i<max;i++){ //scroll back (left) max characters; notice max -= 16
+        LCD_sendbyte(0b00011100,0); //scroll left function
+        //code here to scroll the text on the LCD screen
+        __delay_ms(500); // delay 0.5 sec
+        }
     }
-    for (i=0;i<max;i++){
-    LCD_sendbyte(0b00011100,0); //Turn on DB3
-    //code here to scroll the text on the LCD screen
-    __delay_ms(500);
-    }
-    __delay_ms(200); //call initial delay function
 }
  
 /************************************
