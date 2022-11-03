@@ -55,22 +55,13 @@ void LCD_Init(void)
     //Define LCD Pins as Outputs and
     //set all pins low (might be random values on start up, fixes lots of issues)
     TRISCbits.TRISC2 = 0;
-    
     TRISCbits.TRISC6 = 0;
- 
     TRISBbits.TRISB3 = 0;
     TRISBbits.TRISB2 = 0;
     TRISEbits.TRISE3 = 0;
     TRISEbits.TRISE1 = 0;
- 
-    //Initialisation sequence code
-    // follow the sequence in the GitHub Readme picture for 4-bit interface.
-    // first Function set should be sent with LCD_sendnibble (the LCD is in 8 bit mode at start up)
-    // after this use LCD_sendbyte to operate in 4 bit mode
-    TRISCbits.TRISC6 = 0;
-    
-    __delay_ms(60);      //Delay 40mS
- 
+    __delay_ms(60);      //Delay 60mS
+     
     LCD_sendnibble(0b0011);
     __delay_us(40);      //Delay 40uS
  
@@ -80,7 +71,6 @@ void LCD_Init(void)
     LCD_sendbyte(0b00101000,0);
     __delay_us(40);      //Delay 40uS
  
-    
     LCD_sendbyte(0b00001000,0);
     __delay_us(40);      //Delay 40uS
     
@@ -89,10 +79,8 @@ void LCD_Init(void)
     
     LCD_sendbyte(0b00000110,0);
     __delay_ms(2);      //Delay 2ms
- 
         
     LCD_sendbyte(0b00001111,0);
- 
     __delay_ms(2);      //Delay 2ms
  
     //remember to turn the LCD display back on at the end of the initialisation (not in the data sheet)
@@ -115,6 +103,9 @@ void LCD_setline (char line)
 ************************************/
 void LCD_sendstring(char *string)
 {
+    while(*string !=0){
+        LCD_sendbyte(*string++,1);
+    }
     //code here to send a string to LCD using pointers and LCD_sendbyte function
 }
  
