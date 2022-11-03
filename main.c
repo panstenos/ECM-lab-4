@@ -15,8 +15,11 @@ void main(void) {
     LCD_Init();  
 	LCD_setline(1); //Set Line 1
     LCD_sendstring("HELLO WORLD!");
+	LCD_setline(2); //Set Line 1
+    LCD_sendstring("I am Daniel");
     while (1) {
 
     }
 }
+
 
