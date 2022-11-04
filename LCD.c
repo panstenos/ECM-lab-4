@@ -124,7 +124,7 @@ void LCD_sendstring(char *string1, char *string2) //input two strings
 ************************************/
 void LCD_scroll(int max) //scrolls back and forth; input maximum length among the two strings
 {
-    max -= 16; //LCD has 16 bits length 
+    max -= 1; //LCD has 16 bits length 
     if (max > 0){ //only if one of the two lines is more than 16 characters in length
         int i; //declare the integer
         for (i=0;i<max;i++){ //scroll right max characters; notice max -= 16
