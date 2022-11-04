@@ -1,6 +1,6 @@
 #include <xc.h>
 #include "LCD.h"
-
+#include <stdio.h>
 /************************************
  * Function to toggle LCD enable bit on then off
  * when this function is called the LCD screen reads the data lines
@@ -51,7 +51,7 @@ void LCD_sendbyte(unsigned char Byte, char type)
 ************************************/
 void LCD_Init(void)
 {
- 
+    
     //Define LCD Pins as Outputs and
     //set all pins low (might be random values on start up, fixes lots of issues)
     TRISCbits.TRISC2 = 0;
@@ -85,13 +85,27 @@ void LCD_Init(void)
     
     LCD_sendbyte(0b00000001,0); //Set DB4-7 to 0 -> Clear screen
     __delay_ms(2);      //Delay 2ms
-    
-    LCD_sendbyte(0b00001111,0); //DB6=1; I/D=1; SH=1 -> Enable shifting of entire display
-    __delay_ms(2);      //Delay 2ms
+        
+    LCD_sendbyte(0b00000110,0);  // 0x06 Auto Increment cursor, shift display off
+
+    LCD_sendbyte(0b00001110,0);  //Cursor on, blinking off
+    LCD_sendbyte(0b00001100,0);  //Cursor off, blinking off
  
     //remember to turn the LCD display back on at the end of the initialisation (not in the data sheet)
 }
  
+void LCD_clear(void)
+{
+    __delay_us(40);
+    LCD_sendbyte(0b00000001,0); //Set DB4-7 to 0 -> Clear screen
+    
+    __delay_ms(2);      //Delay 2ms    
+    LCD_sendbyte(0b00000110,0);  // 0x06 Auto Increment cursor, shift display off
+    LCD_sendbyte(0b00001110,0);  //Cursor on, blinking off
+    LCD_sendbyte(0b00001100,0);  //Cursor off, blinking off
+    
+}
+
 /************************************
  * Function to set the cursor to beginning of line 1 or 2
 ************************************/
@@ -124,7 +138,7 @@ void LCD_sendstring(char *string1, char *string2) //input two strings
 ************************************/
 void LCD_scroll(int max) //scrolls back and forth; input maximum length among the two strings
 {
-    max -= 1; //LCD has 16 bits length 
+    max -= 15; //LCD has 16 bits length 
     if (max > 0){ //only if one of the two lines is more than 16 characters in length
         int i; //declare the integer
         for (i=0;i<max;i++){ //scroll right max characters; notice max -= 16
@@ -146,6 +160,12 @@ void LCD_scroll(int max) //scrolls back and forth; input maximum length among th
  * Note result is stored in a buffer using pointers, it is not sent to the LCD
 ************************************/
 void ADC2String(char *buf, unsigned int ADC_val){
+    //int int_part;
+    //float frac_part; 
     //code to calculate the inegeter and fractions part of a ADC value
+    //int_part = ADC_val/51;
+    //frac_part = (ADC_val*100)/51 - int_part*100;
+    //sprintf(buf, "%d.%02d",int_part, frac_part);
     // and format as a string using sprintf (see GitHub readme)
+    sprintf(buf, "x = %d",ADC_val); //convert integer to float
 }
