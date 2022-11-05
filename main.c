@@ -21,9 +21,8 @@ void main(void) {
         
         LCD_clear(); //clear screen function
         ADC2String(*buf, ADC_getval()); //convert integer into string
-        LCD_sendstring(*buf,""); // print ldr value /255
+        LCD_sendstring(*buf,"max = 3.3V"); // print ldr value /255
         __delay_ms(100);
         
     }
 }
-
