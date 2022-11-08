@@ -19,9 +19,10 @@ void LCD_sendnibble(unsigned char number);
 void LCD_sendbyte(unsigned char Byte, char type);
 void LCD_Init(void);
 void LCD_setline (char line);	
-void LCD_sendstring(char *string);
-void LCD_scroll(void);
+void LCD_sendstring(char *string1, char *string2);
+void LCD_scroll(int max);
 void LCD_clear(void);
 void ADC2String(char *buf, unsigned int number);
+void LCD_clear(void);
 
 #endif
