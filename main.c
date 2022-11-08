@@ -17,16 +17,13 @@ void main(void) {
     ADC_init();
     char *buf; 
     __delay_ms(200);
+    
+    
     while (1) {
         
         LCD_clear(); //clear screen function
-        //LCD_setline(1);
-        // LCD_sendbyte((0x0E,0x1F,0x04,0x0C,0x0F,0x04,0x08,0x0A),1); //H
-        //LCD_sendbyte(0xD2,1); //E
-        //0x0E,0x1F,0x04,0x0C,0x0F,0x04,0x08,0x0A
-        ADC2String(*buf, ADC_getval()); //convert integer into string
-        LCD_sendstring(*buf,"max = 3.3V"); // print ldr value /255
-        __delay_ms(100);
+        LCD_bbanimation();
+        __delay_ms(200);
         
     }
 }

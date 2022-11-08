@@ -25,4 +25,8 @@ void LCD_clear(void);
 void ADC2String(char *buf, unsigned int number);
 void LCD_clear(void);
 
+void LCD_bbanimation();
+
+void init_custom_chars(void);
+
 #endif

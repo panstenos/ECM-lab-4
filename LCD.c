@@ -92,6 +92,8 @@ void LCD_Init(void)
     LCD_sendbyte(0b00001100,0);  //Cursor off, blinking off
  
     //remember to turn the LCD display back on at the end of the initialisation (not in the data sheet)
+    
+    init_custom_chars();
 }
  
 void LCD_clear(void)
@@ -123,6 +125,7 @@ void LCD_setline (char line)
 ************************************/
 void LCD_sendstring(char *string1, char *string2) //input two strings
 {
+    
     LCD_setline(1); //write first input in the first line
     while(*string1 !=0){
         LCD_sendbyte(*string1++,1);
@@ -160,15 +163,175 @@ void LCD_scroll(int max) //scrolls back and forth; input maximum length among th
  * Note result is stored in a buffer using pointers, it is not sent to the LCD
 ************************************/
 void ADC2String(char *buf, unsigned int ADC_val){
-    //code to calculate the inegeter and fractions part of a ADC value
     int int_part;
     int frac_part;
     float num = 255/3.3;
     int_part = ADC_val/num;
     frac_part = (ADC_val*100)/num - int_part*100;
     sprintf(buf, "V = %u.%02u",int_part, frac_part);
-    // and format as a string using sprintf (see GitHub readme)
-    //sprintf(buf, "x = %d",ADC_val); //convert integer to float
-    //sprintf(buf, "x = %0.2d",ADC_val);
             
 }
+
+
+unsigned int pos = 18;
+void LCD_bbanimation(){
+
+    for(int i = 0; i < 3; i ++){ // Show the top 3 parts of the sprite
+        
+        if(i + pos >= 0 && i + pos < 16){
+            LCD_sendbyte(0x80 + i + pos,0);   //Set cursor to the right position
+            LCD_sendbyte(i,1);//Print the sprite part
+        }
+    }
+    
+    for(int i = 0;i < 3; i ++){ //Show the bottom 3 parts of the sprite
+        if(i + pos >= 0 && i + pos < 16){
+            LCD_sendbyte(0xC0 + i + pos,0); //Set the cursor at the right position
+            LCD_sendbyte(i + 3,1); //Print the sprite part
+        }
+    }
+        pos--; //Change the pos variable for the next print
+        if(pos == -4){
+            pos = 17;
+        }
+    }
+    
+    
+    
+
+
+void init_custom_chars(){
+    //Store 6 characters representing 6 part of the bulletbill
+    
+    
+    // Code for first row first column bullet bill
+    int line00 = 0b00000;
+    int line01 = 0b00000;
+    int line02 = 0b00001;
+    int line03 = 0b00111;
+    int line04 = 0b01110;
+    int line05 = 0b01100;
+    int line06 = 0b10100;
+    int line07 = 0b10001;
+
+    int lines0[] = {line00,line01,line02,line03,line04,line05,line06,line07};
+    
+    for(unsigned int i = 0; i < 8; i++){
+        unsigned int adress = 0b01000000 + i;
+        LCD_sendbyte(adress,0);
+        __delay_us(40);      //Delay 40uS
+        LCD_sendbyte(lines0[i],1);
+        __delay_us(40);
+    }
+    
+    // Code for first row second column bullet bill part
+
+    int line10 = 0b00000;
+    int line11 = 0b01111;
+    int line12 = 0b11000;
+    int line13 = 0b10111;
+    int line14 = 0b11111;
+    int line15 = 0b11111;
+    int line16 = 0b11111;
+    int line17 = 0b11110;
+
+    int lines1[] = {line10,line11,line12,line13,line14,line15,line16,line17};
+    
+    for(unsigned int i = 0; i < 8; i++){
+        unsigned int adress = 0b01001000 + i;
+        LCD_sendbyte(adress,0);
+        __delay_us(40);      //Delay 40uS
+        LCD_sendbyte(lines1[i],1);
+        __delay_us(40);
+    }
+    
+    // Code for first row third column bullet bill part
+
+    
+    int line20 = 0b00000;
+    int line21 = 0b11001;
+    int line22 = 0b00110;
+    int line23 = 0b11101;
+    int line24 = 0b11111;
+    int line25 = 0b11111;
+    int line26 = 0b11111;
+    int line27 = 0b01111;
+
+    int lines2[] = {line20,line21,line22,line23,line24,line25,line26,line27};
+    
+    for(unsigned int i = 0; i < 8; i++){
+        unsigned int adress = 0b01010000 + i;
+        LCD_sendbyte(adress,0);
+        __delay_us(40);      //Delay 40uS
+        LCD_sendbyte(lines2[i],1);
+        __delay_us(40);
+    } 
+    
+    // Code for second row first column bullet bill part
+    int line30 = 0b11111;
+    int line31 = 0b11111;
+    int line32 = 0b01111;
+    int line33 = 0b01111;
+    int line34 = 0b00111;
+    int line35 = 0b00001;
+    int line36 = 0b00000;
+    int line37 = 0b00000;
+
+    int lines3[] = {line30,line31,line32,line33,line34,line35,line36,line37};
+    
+    for(unsigned int i = 0; i < 8; i++){
+        unsigned int adress = 0b01011000 + i;
+        LCD_sendbyte(adress,0);
+        __delay_us(40);      //Delay 40uS
+        LCD_sendbyte(lines3[i],1);
+        __delay_us(40);
+    }
+    
+    // Code for second row second column bullet bill part
+    int line40 = 0b10010;
+    int line41 = 0b00000;
+    int line42 = 0b00000;
+    int line43 = 0b10001;
+    int line44 = 0b11111;
+    int line45 = 0b11111;
+    int line46 = 0b00111;
+    int line47 = 0b00000;
+
+    int lines4[] = {line40,line41,line42,line43,line44,line45,line46,line47};
+    
+    for(unsigned int i = 0; i < 8; i++){
+        unsigned int adress = 0b01100000 + i;
+        LCD_sendbyte(adress,0);
+        __delay_us(40);      //Delay 40uS
+        LCD_sendbyte(lines4[i],1);
+        __delay_us(40);
+    }
+    
+    // Code for second row third column bullet bill part
+    int line50 = 0b00111;
+    int line51 = 0b00111;
+    int line52 = 0b01111;
+    int line53 = 0b11111;
+    int line54 = 0b11111;
+    int line55 = 0b11111;
+    int line56 = 0b10011;
+    int line57 = 0b00000;
+
+    int lines5[] = {line50,line51,line52,line53,line54,line55,line56,line57};
+    
+    for(unsigned int i = 0; i < 8; i++){
+        unsigned int adress = 0b01101000 + i;
+        LCD_sendbyte(adress,0);
+        __delay_us(40);      //Delay 40uS
+        LCD_sendbyte(lines5[i],1);
+        __delay_us(40);
+    }
+    
+}
+
+
+    
+
+
+
+
