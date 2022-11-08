@@ -161,14 +161,14 @@ void LCD_scroll(int max) //scrolls back and forth; input maximum length among th
 ************************************/
 void ADC2String(char *buf, unsigned int ADC_val){
     //code to calculate the inegeter and fractions part of a ADC value
-    //int int_part;
-    //int frac_part;
-    //float num = 255/3.3;
-    //int_part = ADC_val/num;
-    //frac_part = (ADC_val*100)/num - int_part*100;
-    //sprintf(buf, "V = %d.%02d",int_part, frac_part);
+    int int_part;
+    int frac_part;
+    float num = 255/3.3;
+    int_part = ADC_val/num;
+    frac_part = (ADC_val*100)/num - int_part*100;
+    sprintf(buf, "V = %u.%02u",int_part, frac_part);
     // and format as a string using sprintf (see GitHub readme)
-    sprintf(buf, "x = %d",ADC_val); //convert integer to float
+    //sprintf(buf, "x = %d",ADC_val); //convert integer to float
     //sprintf(buf, "x = %0.2d",ADC_val);
             
 }

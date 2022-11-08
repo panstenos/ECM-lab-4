@@ -25,7 +25,7 @@ void main(void) {
         //LCD_sendbyte(0xD2,1); //E
         //0x0E,0x1F,0x04,0x0C,0x0F,0x04,0x08,0x0A
         ADC2String(*buf, ADC_getval()); //convert integer into string
-        LCD_sendstring(*buf,"max = 255"); // print ldr value /255
+        LCD_sendstring(*buf,"max = 3.3V"); // print ldr value /255
         __delay_ms(100);
         
     }
