@@ -23,7 +23,7 @@ void main(void) {
         
         LCD_clear(); //clear screen function
         LCD_bbanimation();
-        __delay_ms(200);
+
         
     }
 }

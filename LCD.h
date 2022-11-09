@@ -27,6 +27,6 @@ void LCD_clear(void);
 
 void LCD_bbanimation();
 
-void init_custom_chars(void);
+void init_custom_chars(unsigned int);
 
 #endif

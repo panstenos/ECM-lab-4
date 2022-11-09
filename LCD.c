@@ -93,7 +93,7 @@ void LCD_Init(void)
  
     //remember to turn the LCD display back on at the end of the initialisation (not in the data sheet)
     
-    init_custom_chars();
+    init_custom_chars(2);
 }
  
 void LCD_clear(void)
@@ -173,34 +173,53 @@ void ADC2String(char *buf, unsigned int ADC_val){
 }
 
 
-unsigned int pos = 18;
+unsigned int pos = 16;
+unsigned int sprite_offset = 0;
 void LCD_bbanimation(){
+    for(int i = 0; i < 4; i ++){ // Show the top 3 parts of the sprite
 
-    for(int i = 0; i < 3; i ++){ // Show the top 3 parts of the sprite
-        
-        if(i + pos >= 0 && i + pos < 16){
-            LCD_sendbyte(0x80 + i + pos,0);   //Set cursor to the right position
+    if(i + pos >= 0 && i + pos < 16){
+        LCD_sendbyte(0x80 + i + pos,0);   //Set cursor to the right position
+        if(i != 3){
             LCD_sendbyte(i,1);//Print the sprite part
+        }else{
+            LCD_sendbyte(6,1);//Print the sprite part
         }
     }
-    
-    for(int i = 0;i < 3; i ++){ //Show the bottom 3 parts of the sprite
-        if(i + pos >= 0 && i + pos < 16){
-            LCD_sendbyte(0xC0 + i + pos,0); //Set the cursor at the right position
-            LCD_sendbyte(i + 3,1); //Print the sprite part
+}
+
+for(int i = 0;i < 4; i ++){ //Show the bottom 3 parts of the sprite
+    if(i + pos >= 0 && i + pos < 16){
+        LCD_sendbyte(0xC0 + i + pos,0); //Set the cursor at the right position
+        if(i != 3){
+        LCD_sendbyte(i + 3,1); //Print the sprite part
+        }else{
+            LCD_sendbyte(7,1);//Print the sprite part
         }
     }
-        pos--; //Change the pos variable for the next print
-        if(pos == -4){
-            pos = 17;
-        }
+}
+    if(sprite_offset == 0){
+        init_custom_chars(sprite_offset);
+    }
+    sprite_offset++;
+    if(sprite_offset == 6){
+        sprite_offset = 0;
+        pos--;
+    }
+    if(pos == -4){
+        pos = 16;
+    }
+    if(sprite_offset != 0){
+        init_custom_chars(sprite_offset);
+        __delay_ms(125);
+    }
     }
     
     
     
 
 
-void init_custom_chars(){
+void init_custom_chars(unsigned int offset){
     //Store 6 characters representing 6 part of the bulletbill
     
     
@@ -220,7 +239,8 @@ void init_custom_chars(){
         unsigned int adress = 0b01000000 + i;
         LCD_sendbyte(adress,0);
         __delay_us(40);      //Delay 40uS
-        LCD_sendbyte(lines0[i],1);
+        int offset_line = lines0[i] >> 5 - offset;
+        LCD_sendbyte(offset_line,1);
         __delay_us(40);
     }
     
@@ -241,7 +261,8 @@ void init_custom_chars(){
         unsigned int adress = 0b01001000 + i;
         LCD_sendbyte(adress,0);
         __delay_us(40);      //Delay 40uS
-        LCD_sendbyte(lines1[i],1);
+        int offset_line = ((lines0[i] << offset) + (lines1[i] >> 5 - offset));
+        LCD_sendbyte(offset_line,1);
         __delay_us(40);
     }
     
@@ -263,7 +284,8 @@ void init_custom_chars(){
         unsigned int adress = 0b01010000 + i;
         LCD_sendbyte(adress,0);
         __delay_us(40);      //Delay 40uS
-        LCD_sendbyte(lines2[i],1);
+        int offset_line = ((lines1[i] << offset) + (lines2[i] >> 5 - offset));
+        LCD_sendbyte(offset_line,1);
         __delay_us(40);
     } 
     
@@ -283,7 +305,9 @@ void init_custom_chars(){
         unsigned int adress = 0b01011000 + i;
         LCD_sendbyte(adress,0);
         __delay_us(40);      //Delay 40uS
-        LCD_sendbyte(lines3[i],1);
+        int offset_line = lines3[i] >> 5 - offset;
+
+        LCD_sendbyte(offset_line,1);
         __delay_us(40);
     }
     
@@ -303,7 +327,9 @@ void init_custom_chars(){
         unsigned int adress = 0b01100000 + i;
         LCD_sendbyte(adress,0);
         __delay_us(40);      //Delay 40uS
-        LCD_sendbyte(lines4[i],1);
+        int offset_line = ((lines3[i] << offset) + (lines4[i] >> 5 - offset));
+
+        LCD_sendbyte(offset_line,1);
         __delay_us(40);
     }
     
@@ -323,9 +349,33 @@ void init_custom_chars(){
         unsigned int adress = 0b01101000 + i;
         LCD_sendbyte(adress,0);
         __delay_us(40);      //Delay 40uS
-        LCD_sendbyte(lines5[i],1);
+        int offset_line = ((lines4[i] << offset) + (lines5[i] >> 5 - offset));
+
+        LCD_sendbyte(offset_line,1);
         __delay_us(40);
     }
+    
+    
+    
+    
+    
+    for(unsigned int i = 0; i < 8; i++){
+        unsigned int adress = 0b01110000 + i;
+        LCD_sendbyte(adress,0);
+        __delay_us(40);      //Delay 40uS
+        int offset_line = (lines2[i] << offset);
+        LCD_sendbyte(offset_line,1);
+        __delay_us(40);
+    } 
+     for(unsigned int i = 0; i < 8; i++){
+        unsigned int adress = 0b01111000 + i;
+        LCD_sendbyte(adress,0);
+        __delay_us(40);      //Delay 40uS
+        int offset_line = (lines5[i] << offset);
+        LCD_sendbyte(offset_line,1);
+        __delay_us(40);
+    } 
+    
     
 }
 
